@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/bggray"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <ImageView
+                style="@style/big_img"
+                android:layout_gravity="center"
+                android:layout_marginBottom="20dp"
+                android:background="@color/white"
+                android:src="@drawable/haimeiyouguanzhuderen" />
+
+            <TextView
+                style="@style/small_txt"
+                android:text="@string/haimeiyouguanzhuderen" />
+
+        </LinearLayout>
+
+        <TextView
+            style="@style/txt_h1"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:background="@color/bggray"
+            android:gravity="center"
+            android:text="@string/weinituijian"
+            android:textColor="@color/black" />
+
+        <LinearLayout
+            android:id="@+id/FF_linear"
+            style="@style/PC"
+            android:background="@color/bggray"
+            android:orientation="vertical">
+
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>
+
+

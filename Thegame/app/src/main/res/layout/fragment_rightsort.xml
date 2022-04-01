@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp">
+
+    <ViewFlipper
+        android:id="@+id/RF_viewflipper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:flipInterval="3000"
+        android:inAnimation="@anim/right_in"
+        android:outAnimation="@anim/right_out">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/rightsort_first_lunbo_1" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/rightsort_first_lunbo_2" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/rightsort_first_lunbo_3" />
+
+    </ViewFlipper>
+
+    <TextView
+        style="@style/FS_fragmentfirst_textview"
+        android:layout_marginBottom="10dp"
+        android:text="@string/changyongfenlei" />
+
+    <GridView
+        android:id="@+id/FS_gridview_first"
+        style="@style/height_alone"
+        android:numColumns="3"
+        android:scrollbars="none" />
+
+</LinearLayout>
