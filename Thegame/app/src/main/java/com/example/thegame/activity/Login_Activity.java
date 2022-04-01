@@ -1,6 +1,5 @@
 package com.example.thegame.activity;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -26,16 +25,16 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class Login_Activity extends AppCompatActivity {
-    private EditText editText_name, editText_password;
-    private Button btn_login, btn_register;
-    private ImageButton imgbtn_back;
-    private final OkHttpClient okHttpClient = new OkHttpClient();
+    private EditText editText_name, editText_password; // 用户名控件 密码控件
+    private Button btn_login, btn_register; // 登陆按钮 注册按钮
+    private ImageButton imgbtn_back; // 返回按钮
 
-    private final String TAG = "Login_Activity";
+    private final String TAG = "Login_Activity"; // 测试语句
 
     private String name;
     private String password;
 
+    private final OkHttpClient okHttpClient = new OkHttpClient();
     private SharedPreferences sharedPreferences;
 
     @Override
@@ -106,11 +105,12 @@ public class Login_Activity extends AppCompatActivity {
     }
 
     //    AsyncTask多线程 负责注册
-    class Register extends AsyncTask<String, String, Boolean> {
+    class Register extends AsyncTask<String, String, Integer> {
         JSONObject jsonObject;
+        private final int SERVER_ERROR = 500;
 
         @Override
-        protected Boolean doInBackground(String... strings) {
+        protected Integer doInBackground(String... strings) {
             FormBody formBody = new FormBody.Builder().add("u_email", name).add("u_password", password).build();
             Request request = new Request.Builder().post(formBody).url("https://k4608x0632.imdo.co/android/doRegister.php").build();
             Call call = okHttpClient.newCall(request);
@@ -120,46 +120,56 @@ public class Login_Activity extends AppCompatActivity {
                 String responseString = response.body().string();
 
                 jsonObject = JSONObject.parseObject(responseString);
-                return jsonObject.getBoolean("success");
+
+                return response.code();
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            return false;
+            return SERVER_ERROR;
         }
 
         @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            super.onPostExecute(aBoolean);
+        protected void onPostExecute(Integer integer) {
+            super.onPostExecute(integer);
 
-            if (!aBoolean)
-                Toast.makeText(Login_Activity.this, jsonObject.getString("msg"), Toast.LENGTH_LONG).show();
-            else {
-                Intent intent = new Intent();
-                Map<String, Object> map = jsonObject.getJSONObject("0").getInnerMap();
-                for (Map.Entry<String, Object> entry : map.entrySet()) {
-                    intent.putExtra(entry.getKey(), String.valueOf(entry.getValue()));
-                }
-                setResult(RESULT_OK, intent);
+            switch (integer / 100) {
+                case 1:
+                case 2:
+                case 3:
+                    Intent intent = new Intent();
+                    Map<String, Object> map = jsonObject.getJSONObject("0").getInnerMap();
+                    for (Map.Entry<String, Object> entry : map.entrySet()) {
+                        intent.putExtra(entry.getKey(), String.valueOf(entry.getValue()));
+                    }
+                    setResult(RESULT_OK, intent);
 
-                SharedPreferences.Editor editor = sharedPreferences.edit();
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
 
-                for (Map.Entry<String, Object> entry : map.entrySet()) {
-                    editor.putString(entry.getKey(), (String) entry.getValue());
-                }
-                editor.commit();
+                    for (Map.Entry<String, Object> entry : map.entrySet()) {
+                        editor.putString(entry.getKey(), (String) entry.getValue());
+                    }
+                    editor.commit();
 
-                finish();
+                    finish();
+                    break;
+                case 4:
+                    Toast.makeText(Login_Activity.this, "客户端错误！", Toast.LENGTH_SHORT).show();
+                    break;
+                case 5:
+                    Toast.makeText(Login_Activity.this, "服务器错误！", Toast.LENGTH_SHORT).show();
+                    break;
             }
         }
     }
 
     // AsyncTask多线程 负责登陆部分
-    class MyTask extends AsyncTask<String, String, Boolean> {
+    class MyTask extends AsyncTask<String, String, Integer> {
         JSONObject jsonObject;
+        private final int SERVER_ERROR = 500;
 
         @Override
-        protected Boolean doInBackground(String... strings) {
+        protected Integer doInBackground(String... strings) {
             // 运行于子线程
             // okHttp
             FormBody formBody = new FormBody.Builder().add("u_email", name).add("u_password", password).build();
@@ -171,36 +181,45 @@ public class Login_Activity extends AppCompatActivity {
                 String responseString = response.body().string();
 
                 jsonObject = JSONObject.parseObject(responseString);
-                return jsonObject.getBoolean("success");
+
+                return response.code();
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            return false;
+            return SERVER_ERROR;
         }
 
         @Override
-        protected void onPostExecute(Boolean aBoolean) {
+        protected void onPostExecute(Integer integer) {
             // 当doIn执行完毕后系统会自动调用这个函数，并且doin方法的返回值是该函数的参数
-            super.onPostExecute(aBoolean);
+            super.onPostExecute(integer);
 
-            if (!aBoolean) {
-                Toast.makeText(Login_Activity.this, jsonObject.getString("msg"), Toast.LENGTH_LONG).show();
-            } else {
-                Intent intent = new Intent();
-                Map<String, Object> map = jsonObject.getJSONObject("0").getInnerMap();
-                for (Map.Entry<String, Object> entry : map.entrySet()) {
-                    intent.putExtra(entry.getKey(), String.valueOf(entry.getValue()));
-                }
-                setResult(RESULT_OK, intent);
+            switch (integer / 100) {
+                case 1:
+                case 2:
+                case 3:
+                    Intent intent = new Intent();
+                    Map<String, Object> map = jsonObject.getJSONObject("0").getInnerMap();
+                    for (Map.Entry<String, Object> entry : map.entrySet()) {
+                        intent.putExtra(entry.getKey(), String.valueOf(entry.getValue()));
+                    }
+                    setResult(RESULT_OK, intent);
 
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                for (Map.Entry<String, Object> entry : map.entrySet()) {
-                    editor.putString(entry.getKey(), (String) entry.getValue());
-                }
-                editor.commit();
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    for (Map.Entry<String, Object> entry : map.entrySet()) {
+                        editor.putString(entry.getKey(), (String) entry.getValue());
+                    }
+                    editor.commit();
 
-                finish();
+                    finish();
+                    break;
+                case 4:
+                    Toast.makeText(Login_Activity.this, "客户端错误！", Toast.LENGTH_SHORT).show();
+                    break;
+                case 5:
+                    Toast.makeText(Login_Activity.this, "服务器错误！", Toast.LENGTH_SHORT).show();
+                    break;
             }
         }
     }

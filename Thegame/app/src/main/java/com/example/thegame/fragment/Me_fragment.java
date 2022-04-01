@@ -121,37 +121,48 @@ public class Me_fragment extends Fragment {
         }
     }
 
-    class UserTask extends AsyncTask<String, String, Boolean> {
+    class UserTask extends AsyncTask<String, String, Integer> {
         JSONObject jsonObject;
+        private final int SERVER_ERROR = 500;
 
         @Override
-        protected Boolean doInBackground(String... strings) {
+        protected Integer doInBackground(String... strings) {
             OkHttpClient okHttpClient = new OkHttpClient();
             FormBody formBody = new FormBody.Builder().add("uid", uid).build();
             Request request = new Request.Builder().url("https://k4608x0632.imdo.co/android/getUser.php").post(formBody).build();
             Call call = okHttpClient.newCall(request);
             try {
                 Response response = call.execute();
+
                 String jsonString = response.body().string();
                 jsonObject = JSONObject.parseObject(jsonString);
 
-                return jsonObject.getBoolean("success");
+                return response.code();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return false;
+
+            return SERVER_ERROR;
         }
 
         @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            super.onPostExecute(aBoolean);
+        protected void onPostExecute(Integer integer) {
+            super.onPostExecute(integer);
 
-            if (!aBoolean) {
-                Toast.makeText(getActivity(), "我们遇到了未知错误!", Toast.LENGTH_SHORT).show();
-            } else {
-                username = jsonObject.getJSONObject("0").getString("u_name");
+            switch (integer / 100) {
+                case 1:
+                case 2:
+                case 3:
+                    username = jsonObject.getJSONObject("0").getString("u_name");
 //                FIXME 这块有点违和
-                txt_user.setText("Darling: " + username);
+                    txt_user.setText("Darling: " + username);
+                    break;
+                case 4:
+                    Toast.makeText(getActivity(), "客户端错误！", Toast.LENGTH_SHORT).show();
+                    break;
+                case 5:
+                    Toast.makeText(getActivity(), "服务器错误！", Toast.LENGTH_SHORT).show();
+                    break;
             }
         }
     }

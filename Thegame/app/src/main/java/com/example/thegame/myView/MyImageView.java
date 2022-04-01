@@ -6,10 +6,10 @@ import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatImageView;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,25 +20,25 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 
-public class MyImageView extends androidx.appcompat.widget.AppCompatImageView {
+public class MyImageView extends AppCompatImageView {
 
-    public static final int GET_DATA_SUCCESS = 1;
-    public static final int NETWORK_ERROR = 2;
-    public static final int SERVER_ERROR = 3;
 
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(@NonNull Message msg) {
-            switch (msg.what) {
-                case GET_DATA_SUCCESS:
+            switch (msg.what / 100) {
+                case 1:
+                case 2:
+                case 3:
                     Bitmap bitmap = (Bitmap) msg.obj;
                     setImageBitmap(bitmap);
                     break;
-                case NETWORK_ERROR:
+                case 4:
                     Toast.makeText(getContext(), "网络连接失败", Toast.LENGTH_SHORT).show();
                     break;
-                case SERVER_ERROR:
+                case 5:
                     Toast.makeText(getContext(), "服务器g了", Toast.LENGTH_SHORT).show();
+                    break;
             }
         }
     };
@@ -59,7 +59,6 @@ public class MyImageView extends androidx.appcompat.widget.AppCompatImageView {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                //                    URL url = new URL(path);
                 OkHttpClient okHttpClient = new OkHttpClient();
                 Request request = new Request.Builder().url(path).build();
                 Call call = okHttpClient.newCall(request);
@@ -69,7 +68,7 @@ public class MyImageView extends androidx.appcompat.widget.AppCompatImageView {
                     Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
                     Message message = Message.obtain();
                     message.obj = bitmap;
-                    message.what = GET_DATA_SUCCESS;
+                    message.what = response.code();
                     handler.sendMessage(message);
                     inputStream.close();
                 } catch (IOException e) {

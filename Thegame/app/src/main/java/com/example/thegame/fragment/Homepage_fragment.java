@@ -1,6 +1,7 @@
 package com.example.thegame.fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 
 public class Homepage_fragment extends Fragment {
 
+    private static final String TAG = "Homepage_fragment";
     private ViewPager viewPager;
     private RadioGroup radioGroup;
     private RadioButton rb_home, rb_pc, rb_phone;
@@ -35,7 +37,6 @@ public class Homepage_fragment extends Fragment {
     Officehomepage_fragment officehomepage_fragment;
     Phonehomepage_fragment phonehomepage_fragment;
     Buildhomepage_fragment buildhomepage_fragment;
-
 
     @Nullable
     @Override
@@ -69,6 +70,7 @@ public class Homepage_fragment extends Fragment {
         list.add(buildhomepage_fragment);
 
         viewPager.setAdapter(new PageAdapter(getFragmentManager(), list));
+
         viewPager.setCurrentItem(0);
     }
 
