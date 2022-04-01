@@ -1,5 +1,6 @@
 package com.example.thegame.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -14,7 +15,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.thegame.R;
-import com.example.thegame.sql.DBUtil;
 
 import java.io.IOException;
 import java.util.Map;
@@ -29,7 +29,6 @@ public class Login_Activity extends AppCompatActivity {
     private EditText editText_name, editText_password;
     private Button btn_login, btn_register;
     private ImageButton imgbtn_back;
-    private DBUtil dbUtil;
     private final OkHttpClient okHttpClient = new OkHttpClient();
 
     private final String TAG = "Login_Activity";
@@ -54,8 +53,6 @@ public class Login_Activity extends AppCompatActivity {
         imgbtn_back = findViewById(R.id.LA_imgbtn_back);
         btn_register = findViewById(R.id.LA_btn_register);
 
-        dbUtil = new DBUtil(this);
-        dbUtil.open();
         sharedPreferences = this.getSharedPreferences("user", MODE_PRIVATE);
 
 //        登陆事件
